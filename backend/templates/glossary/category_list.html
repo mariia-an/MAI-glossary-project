@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Категории - MAI Glossary{% endblock %}
+
+{% block content %}
+<h1 class="text-center mb-2">📂 Все категории</h1>
+
+<div class="category-grid">
+    {% for category in categories %}
+    <a href="{% url 'category_detail' category.slug %}" class="category-card">
+        <div class="category-icon">{{ category.icon }}</div>
+        <h3>{{ category.name }}</h3>
+        <p>{{ category.description|default:"Изучайте термины этой категории" }}</p>
+        <small>{{ category.terms.count }} терминов</small>
+    </a>
+    {% endfor %}
+</div>
+{% endblock %}

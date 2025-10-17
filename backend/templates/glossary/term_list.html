@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Все термины - MAI Glossary{% endblock %}
+
+{% block content %}
+<h1 class="mb-2">
+    📚 Все термины
+    {% if query %}
+    <small>Результаты поиска: "{{ query }}"</small>
+    {% endif %}
+</h1>
+
+<div class="card">
+    {% for term in terms %}
+    <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+        <h3>
+            <a href="{% url 'term_detail' term.slug %}" style="text-decoration: none; color: #333;">
+                {{ term.title }}
+            </a>
+            <span style="background: #667eea; color: white; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">
+                {{ term.category.name }}
+            </span>
+        </h3>
+        <p>{{ term.definition|truncatewords:30 }}</p>
+        <small style="color: #666;">
+            Сложность: {{ term.get_difficulty_display }} • 
+            Добавлен: {{ term.created_at|date:"d.m.Y" }}
+        </small>
+    </div>
+    {% empty %}
+    <p class="text-center">Термины не найдены.</p>
+    {% endfor %}
+</div>
+{% endblock %}

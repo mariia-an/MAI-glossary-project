@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ term.title }} - MAI Glossary{% endblock %}
+
+{% block content %}
+<div class="card">
+    <nav style="margin-bottom: 1rem;">
+        <a href="{% url 'home' %}">Главная</a> → 
+        <a href="{% url 'category_detail' term.category.slug %}">{{ term.category.name }}</a> → 
+        <span>{{ term.title }}</span>
+    </nav>
+    
+    <h1>{{ term.title }}</h1>
+    
+    <div style="display: flex; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
+        <span style="background: #667eea; color: white; padding: 0.3rem 0.8rem; border-radius: 15px;">
+            {{ term.category.name }} {{ term.category.icon }}
+        </span>
+        <span style="background: #28a745; color: white; padding: 0.3rem 0.8rem; border-radius: 15px;">
+            Сложность: {{ term.get_difficulty_display }}
+        </span>
+    </div>
+    
+    <div class="card" style="background: #f8f9fa;">
+        <h2>📖 Определение</h2>
+        <p style="font-size: 1.1rem; line-height: 1.6;">{{ term.definition }}</p>
+    </div>
+    
+    {% if term.explanation %}
+    <div class="card">
+        <h2>🔍 Подробное объяснение</h2>
+        <p style="white-space: pre-line;">{{ term.explanation }}</p>
+    </div>
+    {% endif %}
+    
+    {% if term.examples %}
+    <div class="card">
+        <h2>💡 Примеры использования</h2>
+        <p style="white-space: pre-line;">{{ term.examples }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="card" style="background: #e9ecef;">
+        <small>
+            <strong>Автор:</strong> {{ term.author.username }} • 
+            <strong>Добавлен:</strong> {{ term.created_at|date:"d.m.Y H:i" }} • 
+            <strong>Обновлен:</strong> {{ term.updated_at|date:"d.m.Y H:i" }}
+        </small>
+    </div>
+</div>
+
+{% if related_terms %}
+<div class="card">
+    <h2>📚 Связанные термины</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        {% for related_term in related_terms %}
+        <a href="{% url 'term_detail' related_term.slug %}" style="text-decoration: none; color: inherit;">
+            <div style="padding: 1rem; background: white; border-radius: 6px; border-left: 3px solid #667eea;">
+                <strong>{{ related_term.title }}</strong>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; color: #666;">
+                    {{ related_term.definition|truncatewords:10 }}
+                </p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="text-center mt-2">
+    <a href="{% url 'category_detail' term.category.slug %}">← Назад к категории {{ term.category.name }}</a>
+</div>
+{% endblock %}

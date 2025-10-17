@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Главная - MAI Glossary{% endblock %}
+
+{% block content %}
+<div class="text-center mb-2">
+    <h1>Добро пожаловать в MAI Glossary! 🚀</h1>
+    <p>Изучайте аэрокосмические термины и становьтесь лучшими инженерами страны</p>
+</div>
+
+<div class="card mb-2">
+    <h2>🔍 Быстрый поиск</h2>
+    <form action="{% url 'search' %}" method="get" class="search-form">
+        <input type="text" name="q" class="search-input" placeholder="Введите термин для поиска...">
+        <button type="submit" class="search-button">Искать</button>
+    </form>
+</div>
+
+<div class="card mb-2">
+    <h2>📂 Основные категории</h2>
+    <div class="category-grid">
+        {% for category in categories %}
+        <a href="{% url 'category_detail' category.slug %}" class="category-card">
+            <div class="category-icon">{{ category.icon }}</div>
+            <h3>{{ category.name }}</h3>
+            <p>{{ category.terms.count }} терминов</p>
+        </a>
+        {% endfor %}
+    </div>
+    <div class="text-center">
+        <a href="{% url 'category_list' %}">Все категории →</a>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+    <div class="card">
+        <h2>🆕 Новые термины</h2>
+        <ul style="list-style: none;">
+            {% for term in recent_terms %}
+            <li style="margin-bottom: 0.5rem;">
+                <a href="{% url 'term_detail' term.slug %}" style="text-decoration: none; color: #667eea;">
+                    {{ term.title }}
+                </a>
+                <small style="color: #666;">в {{ term.category.name }}</small>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="card">
+        <h2>⭐ Популярные термины</h2>
+        <ul style="list-style: none;">
+            {% for term in popular_terms %}
+            <li style="margin-bottom: 0.5rem;">
+                <a href="{% url 'term_detail' term.slug %}" style="text-decoration: none; color: #667eea;">
+                    {{ term.title }}
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

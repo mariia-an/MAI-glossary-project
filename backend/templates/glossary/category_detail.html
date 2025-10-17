@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} - MAI Glossary{% endblock %}
+
+{% block content %}
+<nav style="margin-bottom: 1rem;">
+    <a href="{% url 'home' %}">Главная</a> → 
+    <a href="{% url 'category_list' %}">Категории</a> → 
+    <span>{{ category.name }}</span>
+</nav>
+
+<div class="card text-center mb-2">
+    <div class="category-icon" style="font-size: 3rem;">{{ category.icon }}</div>
+    <h1>{{ category.name }}</h1>
+    {% if category.description %}
+    <p>{{ category.description }}</p>
+    {% endif %}
+    <p><strong>{{ terms.count }} терминов</strong></p>
+</div>
+
+<div class="card">
+    <h2>📖 Термины в этой категории</h2>
+    
+    {% if terms %}
+    <div style="display: grid; gap: 1rem;">
+        {% for term in terms %}
+        <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+            <h3>
+                <a href="{% url 'term_detail' term.slug %}" style="text-decoration: none; color: #333;">
+                    {{ term.title }}
+                </a>
+                <span style="background: #28a745; color: white; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">
+                    {{ term.get_difficulty_display }}
+                </span>
+            </h3>
+            <p>{{ term.definition|truncatewords:30 }}</p>
+            <small style="color: #666;">
+                Добавлен: {{ term.created_at|date:"d.m.Y" }}
+            </small>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center">В этой категории пока нет терминов.</p>
+    {% endif %}
+</div>
+
+<div class="text-center mt-2">
+    <a href="{% url 'category_list' %}">← Назад к всем категориям</a>
+</div>
+{% endblock %}

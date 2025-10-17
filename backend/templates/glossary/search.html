@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Поиск - MAI Glossary{% endblock %}
+
+{% block content %}
+<h1 class="mb-2">
+    🔍 Результаты поиска
+    {% if query %}
+    <small>по запросу: "{{ query }}"</small>
+    {% endif %}
+</h1>
+
+<div class="card mb-2">
+    <form action="{% url 'search' %}" method="get" class="search-form">
+        <input type="text" name="q" class="search-input" placeholder="Введите термин для поиска..." value="{{ query }}">
+        <button type="submit" class="search-button">Искать</button>
+    </form>
+</div>
+
+{% if query %}
+<div class="card">
+    <h2>Найдено терминов: {{ results_count }}</h2>
+    
+    {% if terms %}
+    <div style="display: grid; gap: 1rem;">
+        {% for term in terms %}
+        <div style="padding: 1rem; border-bottom: 1px solid #eee;">
+            <h3>
+                <a href="{% url 'term_detail' term.slug %}" style="text-decoration: none; color: #333;">
+                    {{ term.title }}
+                </a>
+                <span style="background: #667eea; color: white; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">
+                    {{ term.category.name }}
+                </span>
+                <span style="background: #28a745; color: white; padding: 0.2rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">
+                    {{ term.get_difficulty_display }}
+                </span>
+            </h3>
+            <p>{{ term.definition|truncatewords:30 }}</p>
+            <small style="color: #666;">
+                Добавлен: {{ term.created_at|date:"d.m.Y" }}
+            </small>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-center">По вашему запросу ничего не найдено.</p>
+    <p class="text-center">Попробуйте изменить поисковый запрос.</p>
+    {% endif %}
+</div>
+{% else %}
+<div class="card text-center">
+    <h2>Введите поисковый запрос</h2>
+    <p>Начните вводить термин в поисковой строке выше</p>
+</div>
+{% endif %}
+{% endblock %}
